@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [formData, setFormData] = useState({
-    username: "", // Changed from 'name' to 'username'
+    username: "",
     email: "",
     password: "",
   });
@@ -18,29 +18,49 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Frontend validation
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "http://localhost:5000/api/auth/register",
-        formData
+        formData,
+        { headers: { "Content-Type": "application/json" } }
       );
-      // Save token to localStorage
+
+      // Save token and user info
       localStorage.setItem("token", res.data.token);
-      navigate("/"); // Redirect to home or login
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      navigate("/"); // Redirect to home page
     } catch (err) {
       console.error(err.response?.data);
-      setError(err.response?.data?.msg || "Registration failed");
+
+      if (
+        err.response?.data?.msg?.includes("already") ||
+        err.response?.data?.errmsg?.includes("E11000")
+      ) {
+        setError("Username or email already exists. Try a different one.");
+      } else if (
+        err.response?.data?.msg?.includes("validation") ||
+        err.response?.data?.msg?.includes("Password")
+      ) {
+        setError(err.response.data.msg || "Invalid input. Check your fields.");
+      } else {
+        setError(err.response?.data?.msg || "Registration failed. Try again.");
+      }
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-[80vh]">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-lg p-8 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-semibold mb-6 text-center">
-          Create Account
-        </h2>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <form className="bg-white shadow-md rounded-lg p-8 w-full max-w-md" onSubmit={handleSubmit}>
+        <h2 className="text-2xl font-semibold mb-6 text-center">Create Account</h2>
+
         {error && <p className="text-red-500 mb-3 text-center">{error}</p>}
 
         <input
@@ -66,7 +86,7 @@ function Register() {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Password (min 6 characters)"
           value={formData.password}
           onChange={handleChange}
           className="w-full p-3 mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
