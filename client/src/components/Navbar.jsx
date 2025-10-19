@@ -1,64 +1,44 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import "../styles/Navbar.css";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-blue-600">
-          MyBlog
-        </Link>
+    <nav>
+      <div className="nav-container">
+        {/* Left Links */}
+        <div className="nav-left">
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/about" className="nav-link">About</Link>
+          <Link to="/contact" className="nav-link">Contact</Link>
+        </div>
 
-        <div className="flex items-center gap-6">
-          <Link
-            to="/"
-            className="text-gray-700 hover:text-blue-600 transition duration-200"
-          >
-            Home
-          </Link>
-          {isLoggedIn ? (
+        {/* Right Links */}
+        <div className="nav-right">
+          {!token ? (
             <>
-              <Link
-                to="/create"
-                className="text-gray-700 hover:text-blue-600 transition duration-200"
-              >
-                Write
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-              >
-                Logout
-              </button>
+              <Link to="/login" className="nav-link">Login</Link>
+              <Link to="/register" className="nav-link">Register</Link>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-blue-600 transition duration-200"
+              <Link to="/profile" className="nav-link">{user?.username}</Link>
+              <Link to="/create-post" className="nav-link">Create Post</Link>
+              <button
+                onClick={handleLogout}
+                className="nav-button logout"
               >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition"
-              >
-                Register
-              </Link>
+                Logout
+              </button>
             </>
           )}
         </div>

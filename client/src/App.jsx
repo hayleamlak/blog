@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BlogDetail from "./pages/BlogDetail";
+import CreatePost from "./pages/CreatePost"; // <-- import it
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/create-post" element={<CreatePost />} /> {/* <-- add this */}
         </Routes>
       </div>
     </Router>

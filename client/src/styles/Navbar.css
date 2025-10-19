@@ -1,0 +1,52 @@
+/* Navbar.css */
+
+nav {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-link,
+.nav-button {
+  text-decoration: none;
+  color: #4a4a4a;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+
+.nav-link:hover,
+.nav-button:hover {
+  color: #2563eb; /* blue hover */
+  background-color: #f0f4ff;
+}
+
+.nav-button.logout {
+  color: #dc2626; /* red text */
+}
+
+.nav-button.logout:hover {
+  color: #b91c1c; /* darker red hover */
+  background-color: #ffe5e5;
+}
